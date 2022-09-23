@@ -22,6 +22,7 @@ import Foundation
 //        | whileStmt
 //        | block ;
 
+//        whileStmt      → "while" "(" expression ")" statement ;
 
 //        ifStmt         → "if" "(" expression ")" statement
 //        ( "else" statement )? ;
@@ -93,6 +94,10 @@ class Parser {
             return try ifStatement()
         }
 
+        if match(.WHILE) {
+            return try whileStatement()
+        }
+
         if match(.PRINT) {
             return try printStatement()
         }
@@ -117,6 +122,16 @@ class Parser {
         } else {
             return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: nil)
         }
+    }
+
+    func whileStatement() throws -> Stmt {
+        try consume(.LEFT_PAREN, messageIfError: "Expect '(' after 'while'.")
+        let condition = try expression()
+        try consume(.RIGHT_PAREN, messageIfError: "Expect ')' after 'while'.")
+
+        let bodyStatement = try statement()
+
+        return WhileStmt(condition: condition, body: bodyStatement)
     }
 
     func blockStatement() throws -> [Stmt] {

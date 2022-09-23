@@ -48,6 +48,12 @@ class Interpreter: ExprVisitor, StmtVisitor {
         }
     }
 
+    func visit(whileStmt: WhileStmt) -> Void {
+        while evaluate(expr: whileStmt.condition).isTruthy {
+            execute(statement: whileStmt.body)
+        }
+    }
+
     func visit(binary: BinaryExpr) -> Value {
         let left = evaluate(expr: binary.left)
         let right = evaluate(expr: binary.right)
