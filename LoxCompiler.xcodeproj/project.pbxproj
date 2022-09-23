@@ -20,6 +20,7 @@
 		7D68972B289C6F2900AD57A8 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D68972A289C6F2900AD57A8 /* Lox.swift */; };
 		7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268A289D7907002BCB7A /* ContentViewModel.swift */; };
 		7D75268D289D891E002BCB7A /* Character+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268C289D891E002BCB7A /* Character+Extensions.swift */; };
+		7D752690289E721B002BCB7A /* SyntaxTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268F289E721B002BCB7A /* SyntaxTree.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		7D68972A289C6F2900AD57A8 /* Lox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lox.swift; sourceTree = "<group>"; };
 		7D75268A289D7907002BCB7A /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		7D75268C289D891E002BCB7A /* Character+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Character+Extensions.swift"; sourceTree = "<group>"; };
+		7D75268F289E721B002BCB7A /* SyntaxTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxTree.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				7D68972A289C6F2900AD57A8 /* Lox.swift */,
 				7D5DFE2C289C92EC0071CCD8 /* Token.swift */,
 				7D5DFE2A289C92CC0071CCD8 /* Scanner.swift */,
+				7D75268F289E721B002BCB7A /* SyntaxTree.swift */,
 				7D75268E289D892C002BCB7A /* Extensions */,
 				7D689703289C646100AD57A8 /* Assets.xcassets */,
 				7D689708289C646100AD57A8 /* LoxCompiler.entitlements */,
@@ -286,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D5DFE29289C79530071CCD8 /* String+Extensions.swift in Sources */,
+				7D752690289E721B002BCB7A /* SyntaxTree.swift in Sources */,
 				7D689702289C646000AD57A8 /* ContentView.swift in Sources */,
 				7D689700289C646000AD57A8 /* LoxCompilerApp.swift in Sources */,
 				7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */,

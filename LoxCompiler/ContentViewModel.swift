@@ -21,5 +21,7 @@ class ContentViewModel: ObservableObject {
 
         Lox.shared.$errorMessage
             .assign(to: &$loxErrors)
+
+        testAST()
     }
 }
