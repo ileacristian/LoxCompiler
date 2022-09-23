@@ -45,6 +45,12 @@ class Lox {
             print(token)
         }
 
+        let parser = Parser(tokens: tokens)
+
+        if let expr = parser.parse() {
+            print(ASTPrinter().print(expr))
+        }
+
         return tokens
     }
 
@@ -52,6 +58,14 @@ class Lox {
         report(onLine: line, where: "", message: message)
     }
 
+    func error(forToken token: Token, message: String) {
+        if token.tokenType == .EOF {
+            report(onLine: token.line, where: " at end", message: message)
+        } else {
+            report(onLine: token.line, where: " at '\(token.lexeme)'", message: message)
+        }
+    }
+    
     func report(onLine line: Int, where: String, message: String) {
         let errorMessage = "[line \(line)] Error \(`where`): \(message)"
         print(errorMessage)

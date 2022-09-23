@@ -84,9 +84,6 @@ struct ASTPrinter: Visitor {
     }
 }
 
-
-
-
 func testAST() {
     let expr = Binary(
                         left: Unary(op: Token(tokenType: .MINUS, lexeme: "-", literal: nil, line: 1), right: Literal(value: 123)),
