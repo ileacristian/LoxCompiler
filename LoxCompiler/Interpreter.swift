@@ -37,6 +37,17 @@ class Interpreter: ExprVisitor, StmtVisitor {
         execute(block: blockStmt.statements, enviroment: Environment(parent: environment))
     }
 
+    func visit(ifStmt: IfStmt) -> Void {
+        let condition = evaluate(expr: ifStmt.condition)
+        if case let .BoolValue(condition) = condition {
+            if condition {
+                execute(statement: ifStmt.thenBranch)
+            } else if let elseBranch = ifStmt.elseBranch {
+                execute(statement: elseBranch)
+            }
+        }
+    }
+
     func visit(binary: BinaryExpr) -> Value {
         let left = evaluate(expr: binary.left)
         let right = evaluate(expr: binary.right)

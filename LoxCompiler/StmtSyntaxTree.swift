@@ -13,6 +13,7 @@ protocol StmtVisitor {
     func visit(printStmt: PrintStmt) -> StmtResult
     func visit(varStmt: VarStmt) -> StmtResult
     func visit(blockStmt: BlockStmt) -> StmtResult
+    func visit(ifStmt: IfStmt) -> StmtResult
 }
 
 protocol Stmt {
@@ -52,10 +53,16 @@ struct BlockStmt: Stmt {
     }
 }
 
-//struct IfStmt: Stmt {
-//
-//}
-//
+struct IfStmt: Stmt {
+    let condition: Expr
+    let thenBranch: Stmt
+    let elseBranch: Stmt?
+
+    func accept<V>(visitor: V) -> V.StmtResult where V : StmtVisitor {
+        visitor.visit(ifStmt: self)
+    }
+}
+
 //struct WhileStmt: Stmt {
 //
 //}

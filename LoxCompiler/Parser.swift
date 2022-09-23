@@ -22,6 +22,10 @@ import Foundation
 //        | whileStmt
 //        | block ;
 
+
+//        ifStmt         → "if" "(" expression ")" statement
+//        ( "else" statement )? ;
+
 //        block          → "{" declaration* "}" ;
 
 //        exprStmt       → expression ";" ;
@@ -82,6 +86,10 @@ class Parser {
     }
 
     func statement() throws -> Stmt {
+        if match(.IF) {
+            return try ifStatement()
+        }
+
         if match(.PRINT) {
             return try printStatement()
         }
@@ -91,6 +99,21 @@ class Parser {
         }
 
         return try expressionStatement()
+    }
+
+    func ifStatement() throws -> Stmt {
+        try consume(.LEFT_PAREN, messageIfError: "Expect '(' after 'if'.")
+        let condition = try expression()
+        try consume(.RIGHT_PAREN, messageIfError: "Expect ')' after 'if'.")
+
+        let thenBranch = try statement()
+
+        if match(.ELSE) {
+            let elseBranch = try statement()
+            return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: elseBranch)
+        } else {
+            return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: nil)
+        }
     }
 
     func blockStatement() throws -> [Stmt] {
