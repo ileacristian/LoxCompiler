@@ -8,9 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @StateObject var viewModel = ContentViewModel()
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        VStack {
+            HStack {
+                TextEditor(text: $viewModel.sourceCode)
+                    .font(.system(size: 16).monospaced())
+                TextEditor(text: $viewModel.loxOutput)
+                    .font(.system(size: 16).monospaced())
+            }
+        }.frame(minWidth:1400, minHeight: 800)
     }
 }
 

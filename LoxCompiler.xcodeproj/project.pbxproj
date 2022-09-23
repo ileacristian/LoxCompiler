@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D5DFE29289C79530071CCD8 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5DFE28289C79530071CCD8 /* String+Extensions.swift */; };
+		7D5DFE2B289C92CC0071CCD8 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5DFE2A289C92CC0071CCD8 /* Scanner.swift */; };
+		7D5DFE2D289C92EC0071CCD8 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5DFE2C289C92EC0071CCD8 /* Token.swift */; };
 		7D689700289C646000AD57A8 /* LoxCompilerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6896FF289C646000AD57A8 /* LoxCompilerApp.swift */; };
 		7D689702289C646000AD57A8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D689701289C646000AD57A8 /* ContentView.swift */; };
 		7D689704289C646100AD57A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D689703289C646100AD57A8 /* Assets.xcassets */; };
@@ -14,6 +17,8 @@
 		7D689712289C646100AD57A8 /* LoxCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D689711289C646100AD57A8 /* LoxCompilerTests.swift */; };
 		7D68971C289C646100AD57A8 /* LoxCompilerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D68971B289C646100AD57A8 /* LoxCompilerUITests.swift */; };
 		7D68971E289C646100AD57A8 /* LoxCompilerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D68971D289C646100AD57A8 /* LoxCompilerUITestsLaunchTests.swift */; };
+		7D68972B289C6F2900AD57A8 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D68972A289C6F2900AD57A8 /* Lox.swift */; };
+		7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268A289D7907002BCB7A /* ContentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7D5DFE28289C79530071CCD8 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		7D5DFE2A289C92CC0071CCD8 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
+		7D5DFE2C289C92EC0071CCD8 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		7D6896FC289C646000AD57A8 /* LoxCompiler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoxCompiler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D6896FF289C646000AD57A8 /* LoxCompilerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxCompilerApp.swift; sourceTree = "<group>"; };
 		7D689701289C646000AD57A8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +53,8 @@
 		7D689717289C646100AD57A8 /* LoxCompilerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoxCompilerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D68971B289C646100AD57A8 /* LoxCompilerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxCompilerUITests.swift; sourceTree = "<group>"; };
 		7D68971D289C646100AD57A8 /* LoxCompilerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoxCompilerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		7D68972A289C6F2900AD57A8 /* Lox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lox.swift; sourceTree = "<group>"; };
+		7D75268A289D7907002BCB7A /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +86,6 @@
 			isa = PBXGroup;
 			children = (
 				7D6896FE289C646000AD57A8 /* LoxCompiler */,
-				7D689710289C646100AD57A8 /* LoxCompilerTests */,
 				7D68971A289C646100AD57A8 /* LoxCompilerUITests */,
 				7D6896FD289C646000AD57A8 /* Products */,
 			);
@@ -97,9 +106,15 @@
 			children = (
 				7D6896FF289C646000AD57A8 /* LoxCompilerApp.swift */,
 				7D689701289C646000AD57A8 /* ContentView.swift */,
+				7D75268A289D7907002BCB7A /* ContentViewModel.swift */,
 				7D689703289C646100AD57A8 /* Assets.xcassets */,
 				7D689708289C646100AD57A8 /* LoxCompiler.entitlements */,
 				7D689705289C646100AD57A8 /* Preview Content */,
+				7D68972A289C6F2900AD57A8 /* Lox.swift */,
+				7D5DFE2C289C92EC0071CCD8 /* Token.swift */,
+				7D5DFE2A289C92CC0071CCD8 /* Scanner.swift */,
+				7D5DFE28289C79530071CCD8 /* String+Extensions.swift */,
+				7D689710289C646100AD57A8 /* LoxCompilerTests */,
 			);
 			path = LoxCompiler;
 			sourceTree = "<group>";
@@ -259,8 +274,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5DFE29289C79530071CCD8 /* String+Extensions.swift in Sources */,
 				7D689702289C646000AD57A8 /* ContentView.swift in Sources */,
 				7D689700289C646000AD57A8 /* LoxCompilerApp.swift in Sources */,
+				7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */,
+				7D5DFE2D289C92EC0071CCD8 /* Token.swift in Sources */,
+				7D5DFE2B289C92CC0071CCD8 /* Scanner.swift in Sources */,
+				7D68972B289C6F2900AD57A8 /* Lox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
