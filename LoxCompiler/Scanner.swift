@@ -23,12 +23,8 @@ class Scanner {
     }
 
     func add(token tokenType: TokenType) {
-        add(token: tokenType, literal: nil)
-    }
-
-    func add(token tokenType: TokenType, literal: Any?) {
         let text = String(source[start..<current])
-        tokens.append(Token(tokenType: tokenType, lexeme: text, literal: literal, line: line))
+        tokens.append(Token(tokenType: tokenType, lexeme: text, line: line))
     }
 
     func scanTokens() -> [Token] {
@@ -37,7 +33,7 @@ class Scanner {
             scanToken()
         }
 
-        tokens.append(Token(tokenType: .EOF, lexeme: "", literal: nil, line: line))
+        tokens.append(Token(tokenType: .EOF, lexeme: "", line: line))
         return tokens
     }
 
@@ -124,7 +120,12 @@ class Scanner {
             while peek().isDigit { advance() }
         }
 
-        add(token: .NUMBER, literal: Double(source[start..<current]))
+        guard let number = Double(source[start..<current]) else {
+            // ideally unreachable
+            Lox.shared.error(onLine: line, message: "Unable to read number.")
+            return
+        }
+        add(token: .NUMBER(.DoubleValue(number)))
     }
 
     func stringLiteral() {
@@ -142,8 +143,8 @@ class Scanner {
         advance()
 
         // trim the surrounding quotes
-        let literalString = source[start+1..<current-1]
-        add(token: .STRING, literal: literalString)
+        let literalString = String(source[start+1..<current-1])
+        add(token: .STRING(.StringValue(literalString)))
     }
 
     func identifier() {

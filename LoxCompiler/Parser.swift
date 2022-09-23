@@ -67,7 +67,7 @@ class Parser {
         while match(.BANG_EQUAL, .EQUAL_EQUAL) {
             let op = previous()
             let right = try comparison()
-            expr = Binary(left: expr, op: op, right: right)
+            expr = BinaryExpr(left: expr, op: op, right: right)
         }
 
         return expr
@@ -79,7 +79,7 @@ class Parser {
         while match(.GREATER, .GREATER_EQUAL, .LESS, .LESS_EQUAL) {
             let op = previous()
             let right = try term()
-            expr = Binary(left: expr, op: op, right: right)
+            expr = BinaryExpr(left: expr, op: op, right: right)
         }
 
         return expr
@@ -91,7 +91,7 @@ class Parser {
         while match(.MINUS, .PLUS) {
             let op = previous()
             let right = try factor()
-            expr = Binary(left: expr, op: op, right: right)
+            expr = BinaryExpr(left: expr, op: op, right: right)
         }
 
         return expr
@@ -103,7 +103,7 @@ class Parser {
         while match(.SLASH, .STAR) {
             let op = previous()
             let right = try unary()
-            expr = Binary(left: expr, op: op, right: right)
+            expr = BinaryExpr(left: expr, op: op, right: right)
         }
 
         return expr
@@ -113,25 +113,32 @@ class Parser {
         if match(.BANG, .MINUS) {
             let op = previous()
             let right = try unary()
-            return Unary(op: op, right: right)
+            return UnaryExpr(op: op, right: right)
         }
 
         return try primary()
     }
 
     func primary() throws -> Expr {
-        if match(.FALSE) { return Literal(value: false) }
-        if match(.TRUE) { return Literal(value: true) }
-        if match(.NIL) { return Literal(value: nil) }
+        if match(.FALSE) { return LiteralExpr(value: .BoolValue(false)) }
+        if match(.TRUE) { return LiteralExpr(value: .BoolValue(true)) }
+        if match(.NIL) { return LiteralExpr(value: .NilValue) }
 
-        if match(.NUMBER, .STRING) {
-            return Literal(value: previous().literal)
+        if match(.NUMBER(.AnyValue), .STRING(.AnyValue)) {
+            switch previous().tokenType {
+                case .NUMBER(let value):
+                    return LiteralExpr(value: value)
+                case .STRING(let value):
+                    return LiteralExpr(value: value)
+                default:
+                    abort()
+            }
         }
 
         if match(.LEFT_PAREN) {
             let expr = try expression()
             try consume(.RIGHT_PAREN, messageIfError: "Expect ')' after expression.")
-            return Grouping(expression: expr)
+            return GroupingExpr(expression: expr)
         }
 
         let error = error(forToken: peek(), message: "Expect expression.")
@@ -153,7 +160,7 @@ class Parser {
         if isAtEnd() {
             return false
         }
-        return peek().tokenType == tokenType
+        return peek().tokenType ~= tokenType
     }
 
     @discardableResult

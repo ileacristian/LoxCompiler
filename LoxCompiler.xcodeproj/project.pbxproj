@@ -21,6 +21,7 @@
 		7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268A289D7907002BCB7A /* ContentViewModel.swift */; };
 		7D75268D289D891E002BCB7A /* Character+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268C289D891E002BCB7A /* Character+Extensions.swift */; };
 		7D752690289E721B002BCB7A /* SyntaxTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75268F289E721B002BCB7A /* SyntaxTree.swift */; };
+		7DA5F80428B2F3ED00EAF8E9 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA5F80328B2F3ED00EAF8E9 /* Interpreter.swift */; };
 		7DF8EC6328B2E43D00B5CC3B /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8EC6228B2E43D00B5CC3B /* Parser.swift */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 		7D75268A289D7907002BCB7A /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		7D75268C289D891E002BCB7A /* Character+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Character+Extensions.swift"; sourceTree = "<group>"; };
 		7D75268F289E721B002BCB7A /* SyntaxTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxTree.swift; sourceTree = "<group>"; };
+		7DA5F80328B2F3ED00EAF8E9 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		7DF8EC6228B2E43D00B5CC3B /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,8 +118,9 @@
 				7D68972A289C6F2900AD57A8 /* Lox.swift */,
 				7D5DFE2C289C92EC0071CCD8 /* Token.swift */,
 				7D5DFE2A289C92CC0071CCD8 /* Scanner.swift */,
-				7DF8EC6228B2E43D00B5CC3B /* Parser.swift */,
 				7D75268F289E721B002BCB7A /* SyntaxTree.swift */,
+				7DF8EC6228B2E43D00B5CC3B /* Parser.swift */,
+				7DA5F80328B2F3ED00EAF8E9 /* Interpreter.swift */,
 				7D75268E289D892C002BCB7A /* Extensions */,
 				7D689703289C646100AD57A8 /* Assets.xcassets */,
 				7D689708289C646100AD57A8 /* LoxCompiler.entitlements */,
@@ -225,7 +228,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					7D6896FB289C646000AD57A8 = {
 						CreatedOnToolsVersion = 13.4.1;
@@ -296,6 +299,7 @@
 				7DF8EC6328B2E43D00B5CC3B /* Parser.swift in Sources */,
 				7D689702289C646000AD57A8 /* ContentView.swift in Sources */,
 				7D689700289C646000AD57A8 /* LoxCompilerApp.swift in Sources */,
+				7DA5F80428B2F3ED00EAF8E9 /* Interpreter.swift in Sources */,
 				7D75268B289D7907002BCB7A /* ContentViewModel.swift in Sources */,
 				7D5DFE2D289C92EC0071CCD8 /* Token.swift in Sources */,
 				7D75268D289D891E002BCB7A /* Character+Extensions.swift in Sources */,
@@ -370,6 +374,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -430,6 +435,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -456,9 +462,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LoxCompiler/LoxCompiler.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"LoxCompiler/Preview Content\"";
 				DEVELOPMENT_TEAM = P377655ZXU;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -483,9 +491,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LoxCompiler/LoxCompiler.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"LoxCompiler/Preview Content\"";
 				DEVELOPMENT_TEAM = P377655ZXU;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -511,6 +521,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P377655ZXU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -530,6 +541,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P377655ZXU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -548,6 +560,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P377655ZXU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -565,6 +578,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P377655ZXU;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
