@@ -15,6 +15,7 @@ protocol StmtVisitor {
     func visit(blockStmt: BlockStmt) -> StmtResult
     func visit(ifStmt: IfStmt) -> StmtResult
     func visit(whileStmt: WhileStmt) -> StmtResult
+    func visit(forStmt: ForStmt) -> StmtResult
 }
 
 protocol Stmt {
@@ -73,10 +74,17 @@ struct WhileStmt: Stmt {
     }
 }
 
-//struct ForStmt: Stmt {
-//
-//}
-//
+struct ForStmt: Stmt {
+    let initialization: Stmt
+    let condition: Expr
+    let increment: Stmt
+    let body: Stmt
+
+    func accept<V>(visitor: V) -> V.StmtResult where V : StmtVisitor {
+        visitor.visit(forStmt: self)
+    }
+}
+
 
 //
 //struct ReturnStmt: Stmt {

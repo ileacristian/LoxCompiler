@@ -98,6 +98,11 @@ class Parser {
             return try whileStatement()
         }
 
+
+        if match(.FOR) {
+            return try forStatement()
+        }
+
         if match(.PRINT) {
             return try printStatement()
         }
@@ -132,6 +137,23 @@ class Parser {
         let bodyStatement = try statement()
 
         return WhileStmt(condition: condition, body: bodyStatement)
+    }
+
+    func forStatement() throws -> Stmt {
+        try consume(.LEFT_PAREN, messageIfError: "Expect '(' after 'for'.")
+
+        try consume(.VAR, messageIfError: "Expect var declaration.")
+        let initialization = try varDeclaration()
+
+        let condition = try expression()
+        try consume(.SEMICOLON, messageIfError: "Expect ';' after condition.")
+
+        let increment = ExpressionStmt(expression: try expression())
+        try consume(.RIGHT_PAREN, messageIfError: "Expect ')' after 'for'.")
+
+        let bodyStatement = try statement()
+
+        return ForStmt(initialization: initialization, condition: condition, increment: increment, body: bodyStatement)
     }
 
     func blockStatement() throws -> [Stmt] {
