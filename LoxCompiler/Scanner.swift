@@ -22,6 +22,15 @@ class Scanner {
         self.source = source
     }
 
+    func add(token tokenType: TokenType) {
+        add(token: tokenType, literal: nil)
+    }
+
+    func add(token tokenType: TokenType, literal: Any?) {
+        let text = String(source[start..<current])
+        tokens.append(Token(tokenType: tokenType, lexeme: text, literal: literal, line: line))
+    }
+
     func scanTokens() -> [Token] {
         while !isAtEnd {
             start = current
@@ -69,12 +78,12 @@ class Scanner {
                     add(token: .OR)
                 }
             default:
-                if isDigit(char) {
+                if char.isDigit {
                     numberLiteral()
-                } else if isAlpha(char) {
+                } else if char.isAlpha {
                     identifier()
                 } else {
-                    Lox.error(onLine: line, message: "Unexpected character.")
+                    Lox.shared.error(onLine: line, message: "Unexpected character \(char).")
                 }
         }
     }
@@ -105,28 +114,14 @@ class Scanner {
         return true
     }
 
-    func isDigit(_ char: Character) -> Bool {
-        return char >= "0" && char <= "9"
-    }
-
-    func isAlpha(_ char: Character) -> Bool {
-        char >= "a" && char <= "z" ||
-        char >= "A" && char <= "Z" ||
-        char == "_"
-    }
-
-    func isAlphaNumberic(_ char: Character) -> Bool {
-        isAlpha(char) || isDigit(char)
-    }
-
     func numberLiteral() {
-        while isDigit(peek()) { advance() }
+        while peek().isDigit { advance() }
 
-        if peek() == "." && isDigit(peekNext()) {
+        if peek() == "." && peekNext().isDigit {
             // consume the "."
             advance()
 
-            while isDigit(peek()) { advance() }
+            while peek().isDigit { advance() }
         }
 
         add(token: .NUMBER, literal: Double(source[start..<current]))
@@ -139,7 +134,7 @@ class Scanner {
         }
 
         if isAtEnd {
-            Lox.error(onLine: line, message: "Unterminated string.")
+            Lox.shared.error(onLine: line, message: "Unterminated string.")
             return
         }
 
@@ -152,19 +147,10 @@ class Scanner {
     }
 
     func identifier() {
-        while isAlphaNumberic(peek()) { advance() }
+        while peek().isAlphaNumeric { advance() }
 
         let text = String(source[start..<current])
         let tokenType = TokenType.keywords[text] ?? .IDENTIFIER
         add(token: tokenType)
-    }
-
-    func add(token tokenType: TokenType) {
-        add(token: tokenType, literal: nil)
-    }
-
-    func add(token tokenType: TokenType, literal: Any?) {
-        let text = String(source[start..<current])
-        tokens.append(Token(tokenType: tokenType, lexeme: text, literal: literal, line: line))
     }
 }

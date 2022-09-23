@@ -11,12 +11,15 @@ import Combine
 class ContentViewModel: ObservableObject {
     @Published var sourceCode: String = ""
     @Published var loxOutput: String = ""
-
+    @Published var loxErrors: String = ""
 
     init() {
         $sourceCode
             .debounce(for: .seconds(0.4), scheduler: DispatchQueue.main)
-            .map { Lox.run(source: $0).description }
+            .map { Lox.shared.run(source: $0).description }
             .assign(to: &$loxOutput)
+
+        Lox.shared.$errorMessage
+            .assign(to: &$loxErrors)
     }
 }

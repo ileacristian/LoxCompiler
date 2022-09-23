@@ -8,21 +8,36 @@
 import Foundation
 
 class Lox {
-    static private var hadError: Bool = false
 
-    static func runFile(_ stringPath: String) {
+    public static let shared = Lox()
+
+    private var hadError: Bool = false
+    @Published var errorMessage: String = ""
+
+
+    private init() {
+
+    }
+
+    func runFile(_ stringPath: String) {
+        hadError = false
+        errorMessage = ""
+
         guard let filePath = Bundle.main.url(forResource: stringPath, withExtension: "lox") else { return }
         guard let fileContents = try? String(contentsOf: filePath) else { return }
         run(source: fileContents)
 
-        if Lox.hadError {
+        if hadError {
             print("bai mare")
             // bai mare
         }
     }
 
     @discardableResult
-    static func run(source: String) -> [Token] {
+    func run(source: String) -> [Token] {
+        hadError = false
+        errorMessage = ""
+
         let scanner = Scanner(source: source)
         let tokens: [Token] = scanner.scanTokens()
 
@@ -33,13 +48,15 @@ class Lox {
         return tokens
     }
 
-    static func error(onLine line: Int, message: String) {
-        print("")
+    func error(onLine line: Int, message: String) {
+        report(onLine: line, where: "", message: message)
     }
 
-    static func report(onLine line: Int, where: String, message: String) {
-        print("[line \(line)] Error \(`where`): \(message)")
-        Lox.hadError = true
+    func report(onLine line: Int, where: String, message: String) {
+        let errorMessage = "[line \(line)] Error \(`where`): \(message)"
+        print(errorMessage)
+        hadError = true
+        self.errorMessage = errorMessage
     }
 }
 
