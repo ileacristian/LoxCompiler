@@ -22,11 +22,16 @@ import Foundation
 //        | whileStmt
 //        | block ;
 
+//        block          → "{" declaration* "}" ;
+
 //        exprStmt       → expression ";" ;
 //        printStmt      → "print" expression ";" ;
 //        returnStmt     → "return" expression? ";" ;
 
-//        expression     → equality ;
+//        expression     → assignment ;
+//        assignment     → IDENTIFIER "=" assignment
+//        | equality ;
+
 //        equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 //        comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 //        term           → factor ( ( "-" | "+" ) factor )* ;
@@ -81,7 +86,25 @@ class Parser {
             return try printStatement()
         }
 
+        if match(.LEFT_BRACE) {
+            return BlockStmt(statements: try blockStatement())
+        }
+
         return try expressionStatement()
+    }
+
+    func blockStatement() throws -> [Stmt] {
+        var statements: [Stmt] = []
+
+        while !check(.RIGHT_BRACE) && !isAtEnd() {
+            if let declaration = declaration() {
+                statements.append(declaration)
+            }
+        }
+
+        try consume(.RIGHT_BRACE, messageIfError: "Expect } after block.")
+
+        return statements
     }
 
     func varDeclaration() throws -> Stmt {
@@ -133,7 +156,26 @@ class Parser {
     }
 
     func expression() throws -> Expr {
-        return try equality()
+        return try assignment()
+    }
+
+    func assignment() throws -> Expr {
+        let expr = try equality()
+
+        if match(.EQUAL) {
+            let equals = previous()
+            let value = try assignment()
+
+            if let expr = expr as? VarExpr {
+                let name = expr.name
+                return AssignExpr(name: name, value: value)
+            }
+
+            let err = error(forToken: equals, message: "Invalid assignment target")
+            throw err
+        }
+
+        return expr
     }
 
     func equality() throws -> Expr {

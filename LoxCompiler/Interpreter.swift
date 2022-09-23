@@ -16,7 +16,7 @@ class Interpreter: ExprVisitor, StmtVisitor {
     typealias ExprResult = Value
     typealias StmtResult = Void
 
-    let environment = Environment()
+    var environment = Environment()
 
     func visit(exprStmt: ExpressionStmt) -> Void {
         let _ = evaluate(expr: exprStmt.expression)
@@ -27,11 +27,14 @@ class Interpreter: ExprVisitor, StmtVisitor {
         print(value)
     }
 
-
     func visit(varStmt: VarStmt) -> Void {
         let value = evaluate(expr: varStmt.initializer)
 
         environment.define(name: varStmt.token.lexeme, value: value)
+    }
+
+    func visit(blockStmt: BlockStmt) -> Void {
+        execute(block: blockStmt.statements, enviroment: Environment(parent: environment))
     }
 
     func visit(binary: BinaryExpr) -> Value {
@@ -88,6 +91,12 @@ class Interpreter: ExprVisitor, StmtVisitor {
     func visit(varExpr: VarExpr) -> Value {
         (try? environment.get(name: varExpr.name)) ?? .NilValue
     }
+
+    func visit(assignExpr: AssignExpr) -> Value {
+        let value = evaluate(expr: assignExpr.value)
+        try? environment.assign(name: assignExpr.name, value: value)
+        return value
+    }
     
     func evaluate(expr: Expr) -> Value {
         return expr.accept(visitor: self)
@@ -101,5 +110,14 @@ class Interpreter: ExprVisitor, StmtVisitor {
 
     func execute(statement: Stmt) {
         statement.accept(visitor: self)
+    }
+
+    func execute(block statements: [Stmt], enviroment: Environment) {
+        let previous = self.environment
+        self.environment = enviroment
+        for statement in statements {
+            execute(statement: statement)
+        }
+        self.environment = previous
     }
 }

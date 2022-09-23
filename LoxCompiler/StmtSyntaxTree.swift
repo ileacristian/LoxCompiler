@@ -12,6 +12,7 @@ protocol StmtVisitor {
     func visit(exprStmt: ExpressionStmt) -> StmtResult
     func visit(printStmt: PrintStmt) -> StmtResult
     func visit(varStmt: VarStmt) -> StmtResult
+    func visit(blockStmt: BlockStmt) -> StmtResult
 }
 
 protocol Stmt {
@@ -43,6 +44,14 @@ struct VarStmt: Stmt {
     }
 }
 
+struct BlockStmt: Stmt {
+    let statements: [Stmt]
+
+    func accept<V>(visitor: V) -> V.StmtResult where V : StmtVisitor {
+        visitor.visit(blockStmt: self)
+    }
+}
+
 //struct IfStmt: Stmt {
 //
 //}
@@ -55,9 +64,7 @@ struct VarStmt: Stmt {
 //
 //}
 //
-//struct BlockStmt: Stmt {
-//
-//}
+
 //
 //struct ReturnStmt: Stmt {
 //
