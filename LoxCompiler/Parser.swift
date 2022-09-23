@@ -5,19 +5,40 @@
 //  Created by Cristian Ilea on 22/08/2022.
 //
 
-
-//    expression     → equality ;
-//    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-//    comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-//    term           → factor ( ( "-" | "+" ) factor )* ;
-//    factor         → unary ( ( "/" | "*" ) unary )* ;
-//    unary          → ( "!" | "-" ) unary
-//    | primary ;
-//    primary        → NUMBER | STRING | "true" | "false" | "nil"
-//    | "(" expression ")" ;
-
-
 import Foundation
+
+//        program        → declaration* EOF ;
+//
+//        declaration    → varDecl
+//        | statement ;
+
+//        varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+
+//        statement      → exprStmt
+//        | forStmt
+//        | ifStmt
+//        | printStmt
+//        | returnStmt
+//        | whileStmt
+//        | block ;
+
+//        exprStmt       → expression ";" ;
+//        printStmt      → "print" expression ";" ;
+//        returnStmt     → "return" expression? ";" ;
+
+//        expression     → equality ;
+//        equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+//        comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+//        term           → factor ( ( "-" | "+" ) factor )* ;
+//        factor         → unary ( ( "/" | "*" ) unary )* ;
+
+//        unary          → ( "!" | "-" ) unary
+//        | primary ;
+
+//        primary        → "true" | "false" | "nil"
+//        | NUMBER | STRING
+//        | "(" expression ")"
+//        | IDENTIFIER ;
 
 struct ParseError: Error {
 
@@ -31,12 +52,66 @@ class Parser {
         self.tokens = tokens
     }
 
-    func parse() -> Expr? {
+    func parse() -> [Stmt] {
+        var statements: [Stmt] = []
+        while !isAtEnd() {
+            if let statement = declaration() {
+                statements.append(statement)
+            }
+        }
+
+        return statements
+    }
+
+    func declaration() -> Stmt? {
         do {
-            return try expression()
+            if match(.VAR) {
+                return try varDeclaration()
+            }
+
+            return try statement()
         } catch {
+            synchronize()
             return nil
         }
+    }
+
+    func statement() throws -> Stmt {
+        if match(.PRINT) {
+            return try printStatement()
+        }
+
+        return try expressionStatement()
+    }
+
+    func varDeclaration() throws -> Stmt {
+        let name = try consume(.IDENTIFIER, messageIfError: "Expect variable name.")
+
+        var initializer: Expr? = nil
+        if match(.EQUAL) {
+            initializer = try expression()
+        }
+
+        try consume(.SEMICOLON, messageIfError: "Expect ';' after variable declaration.")
+
+        if let initializer = initializer {
+            return VarStmt(token: name, initializer: initializer)
+        } else {
+            let err = error(forToken: name, message: "Error while parsing initializer")
+            throw err
+        }
+    }
+
+    func printStatement() throws -> Stmt {
+        let value = try expression()
+        try consume(.SEMICOLON, messageIfError: "Expect ';' after value.")
+        return PrintStmt(value: value)
+    }
+
+    func expressionStatement() throws -> Stmt {
+        let value = try expression()
+        try consume(.SEMICOLON, messageIfError: "Expect ';' after expression.")
+        return ExpressionStmt(expression: value)
     }
 
     func synchronize() {
@@ -133,6 +208,10 @@ class Parser {
                 default:
                     abort()
             }
+        }
+
+        if match(.IDENTIFIER) {
+            return VarExpr(name: previous())
         }
 
         if match(.LEFT_PAREN) {

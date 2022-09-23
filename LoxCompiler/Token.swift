@@ -65,6 +65,78 @@ enum Value: Equatable {
     case Error(String)
 }
 
+extension Value: Comparable {
+    static func +(lhs: Self, rhs: Self) -> Self {
+        switch (lhs, rhs) {
+            case (.DoubleValue(let num1), .DoubleValue(let num2)):
+                return .DoubleValue(num1 + num2)
+            case (.StringValue(let str1), .StringValue(let str2)):
+                return .StringValue(str1 + str2)
+            default:
+                return .Error("Cannot apply '+' operator between \(lhs) and \(rhs)")
+        }
+    }
+
+    static func -(lhs: Self, rhs: Self) -> Self {
+        switch (lhs, rhs) {
+            case (.DoubleValue(let num1), .DoubleValue(let num2)):
+                return .DoubleValue(num1 - num2)
+            default:
+                return .Error("Cannot apply '-' operator between \(lhs) and \(rhs)")
+        }
+    }
+
+    static func *(lhs: Self, rhs: Self) -> Self {
+        switch (lhs, rhs) {
+            case (.DoubleValue(let num1), .DoubleValue(let num2)):
+                return .DoubleValue(num1 * num2)
+            default:
+                return .Error("Cannot apply '*' operator between \(lhs) and \(rhs)")
+        }
+    }
+
+    static func /(lhs: Self, rhs: Self) -> Self {
+        switch (lhs, rhs) {
+            case (.DoubleValue(let num1), .DoubleValue(let num2)):
+                return .DoubleValue(num1 / num2)
+            default:
+                return .Error("Cannot apply '/' operator between \(lhs) and \(rhs)")
+        }
+    }
+
+    static prefix func -(term: Self) -> Self {
+        switch (term) {
+            case (.DoubleValue(let num)):
+                return .DoubleValue(-num)
+            default:
+                return .Error("Cannot apply unary operator - to \(term)")
+        }
+    }
+
+    static func < (lhs: Value, rhs: Value) -> Bool {
+        switch (lhs, rhs) {
+            case (.DoubleValue(let num1), .DoubleValue(let num2)):
+                return num1 < num2
+            case (.StringValue(let str1), StringValue(let str2)):
+                return str1 < str2
+            default:
+                return false
+        }
+    }
+
+    var isTruthy: Bool {
+        if self != .NilValue {
+            return false
+        }
+
+        if case let Value.BoolValue(boolean) = self {
+            return boolean
+        }
+
+        return true
+    }
+}
+
 struct Token: CustomStringConvertible {
     let tokenType: TokenType
     let lexeme: String

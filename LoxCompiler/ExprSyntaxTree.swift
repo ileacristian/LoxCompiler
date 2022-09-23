@@ -1,5 +1,5 @@
 //
-//  SyntaxTree.swift
+//  ExprSyntaxTree.swift
 //  LoxCompiler
 //
 //  Created by Cristian Ilea on 06/08/2022.
@@ -8,16 +8,17 @@
 import Foundation
 import SwiftUI
 
-protocol Visitor {
-    associatedtype Result
-    func visit(binary: BinaryExpr) -> Result
-    func visit(grouping: GroupingExpr) -> Result
-    func visit(literal: LiteralExpr) -> Result
-    func visit(unary: UnaryExpr) -> Result
+protocol ExprVisitor {
+    associatedtype ExprResult
+    func visit(binary: BinaryExpr) -> ExprResult
+    func visit(grouping: GroupingExpr) -> ExprResult
+    func visit(literal: LiteralExpr) -> ExprResult
+    func visit(unary: UnaryExpr) -> ExprResult
+    func visit(varExpr: VarExpr) -> ExprResult
 }
 
 protocol Expr {
-    func accept<V: Visitor>(visitor: V) -> V.Result
+    func accept<V: ExprVisitor>(visitor: V) -> V.ExprResult
 }
 
 struct BinaryExpr: Expr {
@@ -25,7 +26,7 @@ struct BinaryExpr: Expr {
     let op: Token
     let right: Expr
 
-    func accept<V>(visitor: V) -> V.Result where V : Visitor {
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
         visitor.visit(binary: self)
     }
 }
@@ -33,7 +34,7 @@ struct BinaryExpr: Expr {
 struct GroupingExpr: Expr {
     let expression: Expr
 
-    func accept<V>(visitor: V) -> V.Result where V : Visitor {
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
         visitor.visit(grouping: self)
     }
 }
@@ -41,7 +42,7 @@ struct GroupingExpr: Expr {
 struct LiteralExpr: Expr {
     let value: Value
 
-    func accept<V>(visitor: V) -> V.Result where V : Visitor {
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
         visitor.visit(literal: self)
     }
 }
@@ -50,13 +51,22 @@ struct UnaryExpr: Expr {
     let op: Token
     let right: Expr
 
-    func accept<V>(visitor: V) -> V.Result where V : Visitor {
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
         visitor.visit(unary: self)
     }
 }
 
-struct ASTPrinter: Visitor {
-    typealias Result = String
+struct VarExpr: Expr {
+    let name: Token
+
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
+        visitor.visit(varExpr: self)
+    }
+}
+
+struct ASTPrinter: ExprVisitor {
+
+    typealias ExprResult = String
     func print<E: Expr>(_ expr: E) -> String {
         return expr.accept(visitor: self)
     }
@@ -77,6 +87,12 @@ struct ASTPrinter: Visitor {
     func visit(unary: UnaryExpr) -> String {
         parenthesize(name: unary.op.lexeme, unary.right)
     }
+
+    func visit(varExpr: VarExpr) -> String {
+        ""
+        // TODO
+    }
+
 
     func visit(literal: LiteralExpr) -> String {
         switch literal.value {

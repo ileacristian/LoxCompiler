@@ -47,10 +47,13 @@ class Lox {
 
         let parser = Parser(tokens: tokens)
 
-        if let expr = parser.parse() {
-            print(ASTPrinter().print(expr))
-            print(Interpreter().evaluate(expr: expr))
-        }
+        let statements = parser.parse()
+
+        print(Interpreter().interpret(statements: statements))
+
+//        print(ASTPrinter().print(expr))
+
+//        print(Interpreter().evaluate(expr: expr))
 
         return tokens
     }

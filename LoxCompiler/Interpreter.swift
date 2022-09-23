@@ -12,81 +12,28 @@ struct RuntimeError: Error {
     let message: String
 }
 
-extension Value: Comparable {
-    static func +(lhs: Self, rhs: Self) -> Self {
-        switch (lhs, rhs) {
-            case (.DoubleValue(let num1), .DoubleValue(let num2)):
-                return .DoubleValue(num1 + num2)
-            case (.StringValue(let str1), .StringValue(let str2)):
-                return .StringValue(str1 + str2)
-            default:
-                return .Error("Cannot apply '+' operator between \(lhs) and \(rhs)")
-        }
+class Interpreter: ExprVisitor, StmtVisitor {
+    typealias ExprResult = Value
+    typealias StmtResult = Void
+
+    let environment = Environment()
+
+    func visit(exprStmt: ExpressionStmt) -> Void {
+        let _ = evaluate(expr: exprStmt.expression)
     }
 
-    static func -(lhs: Self, rhs: Self) -> Self {
-        switch (lhs, rhs) {
-            case (.DoubleValue(let num1), .DoubleValue(let num2)):
-                return .DoubleValue(num1 - num2)
-            default:
-                return .Error("Cannot apply '-' operator between \(lhs) and \(rhs)")
-        }
+    func visit(printStmt: PrintStmt) -> Void {
+        let value = evaluate(expr: printStmt.value)
+        print(value)
     }
 
-    static func *(lhs: Self, rhs: Self) -> Self {
-        switch (lhs, rhs) {
-            case (.DoubleValue(let num1), .DoubleValue(let num2)):
-                return .DoubleValue(num1 * num2)
-            default:
-                return .Error("Cannot apply '*' operator between \(lhs) and \(rhs)")
-        }
+
+    func visit(varStmt: VarStmt) -> Void {
+        let value = evaluate(expr: varStmt.initializer)
+
+        environment.define(name: varStmt.token.lexeme, value: value)
     }
 
-    static func /(lhs: Self, rhs: Self) -> Self {
-        switch (lhs, rhs) {
-            case (.DoubleValue(let num1), .DoubleValue(let num2)):
-                return .DoubleValue(num1 / num2)
-            default:
-                return .Error("Cannot apply '/' operator between \(lhs) and \(rhs)")
-        }
-    }
-
-    static prefix func -(term: Self) -> Self {
-        switch (term) {
-            case (.DoubleValue(let num)):
-                return .DoubleValue(-num)
-            default:
-                return .Error("Cannot apply unary operator - to \(term)")
-        }
-    }
-
-    static func < (lhs: Value, rhs: Value) -> Bool {
-        switch (lhs, rhs) {
-            case (.DoubleValue(let num1), .DoubleValue(let num2)):
-                return num1 < num2
-            case (.StringValue(let str1), StringValue(let str2)):
-                return str1 < str2
-            default:
-                return false
-        }
-    }
-
-    var isTruthy: Bool {
-        if self != .NilValue {
-            return false
-        }
-
-        if case let Value.BoolValue(boolean) = self {
-            return boolean
-        }
-
-        return true
-    }
-}
-
-class Interpreter: Visitor {
-    typealias Result = Value
-    
     func visit(binary: BinaryExpr) -> Value {
         let left = evaluate(expr: binary.left)
         let right = evaluate(expr: binary.right)
@@ -137,8 +84,22 @@ class Interpreter: Visitor {
                 return .Error("Unreachable")
         }
     }
+
+    func visit(varExpr: VarExpr) -> Value {
+        (try? environment.get(name: varExpr.name)) ?? .NilValue
+    }
     
     func evaluate(expr: Expr) -> Value {
         return expr.accept(visitor: self)
+    }
+
+    func interpret(statements: [Stmt]) {
+        for statement in statements {
+            execute(statement: statement)
+        }
+    }
+
+    func execute(statement: Stmt) {
+        statement.accept(visitor: self)
     }
 }
