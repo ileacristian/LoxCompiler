@@ -34,7 +34,10 @@ import Foundation
 
 //        expression     → assignment ;
 //        assignment     → IDENTIFIER "=" assignment
-//        | equality ;
+//        | logic_or ;
+
+//        logic_or       → logic_and ( "or" logic_and )* ;
+//        logic_and      → equality ( "and" equality )* ;
 
 //        equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 //        comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
@@ -183,7 +186,7 @@ class Parser {
     }
 
     func assignment() throws -> Expr {
-        let expr = try equality()
+        let expr = try or()
 
         if match(.EQUAL) {
             let equals = previous()
@@ -196,6 +199,30 @@ class Parser {
 
             let err = error(forToken: equals, message: "Invalid assignment target")
             throw err
+        }
+
+        return expr
+    }
+
+    func or() throws -> Expr {
+        var expr = try and()
+
+        while match(.OR) {
+            let op = previous()
+            let right = try and()
+            expr = LogicalExpr(left: expr, op: op, right: right)
+        }
+
+        return expr
+    }
+
+    func and() throws -> Expr {
+        var expr = try equality()
+
+        while match(.AND) {
+            let op = previous()
+            let right = try equality()
+            expr = LogicalExpr(left: expr, op: op, right: right)
         }
 
         return expr

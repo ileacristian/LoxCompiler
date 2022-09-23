@@ -16,7 +16,7 @@ protocol ExprVisitor {
     func visit(unary: UnaryExpr) -> ExprResult
     func visit(varExpr: VarExpr) -> ExprResult
     func visit(assignExpr: AssignExpr) -> ExprResult
-
+    func visit(logicalExpr: LogicalExpr) -> ExprResult
 }
 
 protocol Expr {
@@ -75,6 +75,16 @@ struct AssignExpr: Expr {
     }
 }
 
+struct LogicalExpr: Expr {
+    let left: Expr
+    let op: Token
+    let right: Expr
+
+    func accept<V>(visitor: V) -> V.ExprResult where V : ExprVisitor {
+        visitor.visit(logicalExpr: self)
+    }
+}
+
 struct ASTPrinter: ExprVisitor {
 
     typealias ExprResult = String
@@ -109,6 +119,10 @@ struct ASTPrinter: ExprVisitor {
         // TODO
     }
 
+    func visit(logicalExpr: LogicalExpr) -> String {
+        ""
+        // TODO
+    }
 
     func visit(literal: LiteralExpr) -> String {
         switch literal.value {

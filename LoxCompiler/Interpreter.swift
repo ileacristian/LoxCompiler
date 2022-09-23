@@ -108,6 +108,22 @@ class Interpreter: ExprVisitor, StmtVisitor {
         try? environment.assign(name: assignExpr.name, value: value)
         return value
     }
+
+    func visit(logicalExpr: LogicalExpr) -> Value {
+        let left = evaluate(expr: logicalExpr.left)
+
+        if logicalExpr.op.tokenType == .OR {
+            if left.isTruthy {
+                return left
+            }
+        } else {
+            if !left.isTruthy {
+                return left
+            }
+        }
+
+        return evaluate(expr: logicalExpr.right)
+    }
     
     func evaluate(expr: Expr) -> Value {
         return expr.accept(visitor: self)

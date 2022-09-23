@@ -125,7 +125,7 @@ extension Value: Comparable {
     }
 
     var isTruthy: Bool {
-        if self != .NilValue {
+        if self == .NilValue {
             return false
         }
 
